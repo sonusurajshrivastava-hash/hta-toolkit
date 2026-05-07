@@ -1,0 +1,226 @@
+<html>
+<head>
+<title>Ultimate PC Master Toolkit Pro</title>
+
+<HTA:APPLICATION 
+  APPLICATIONNAME="Toolkit Pro"
+  BORDER="thin"
+  CAPTION="yes"
+  SHOWINTASKBAR="yes"
+  SINGLEINSTANCE="yes"
+  WINDOWSTATE="normal"
+  SCROLL="no"
+/>
+
+<style>
+body {
+    margin:0;
+    font-family: Segoe UI;
+    background:#0b0b0b;
+    color:#fff;
+}
+
+/* SPLASH SCREEN */
+#splash {
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:#000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:999;
+}
+
+#splash h1 {
+    color:#00ffcc;
+    letter-spacing:2px;
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow:0 0 5px #00ffcc; }
+    to { text-shadow:0 0 20px #00ffcc; }
+}
+
+/* LAYOUT */
+.sidebar {
+    width:220px;
+    height:100vh;
+    background:#141414;
+    float:left;
+    padding:10px;
+    box-shadow:2px 0 10px rgba(0,0,0,0.5);
+}
+
+.sidebar h2 {
+    text-align:center;
+    color:#00ffcc;
+}
+
+.sidebar button {
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    border:none;
+    border-radius:5px;
+    background:#222;
+    color:#fff;
+    cursor:pointer;
+}
+
+.sidebar button:hover {
+    background:#00aaff;
+}
+
+/* MAIN */
+.main {
+    margin-left:230px;
+    padding:15px;
+}
+
+/* TAB HEADER */
+.tabs button {
+    padding:8px 15px;
+    margin-right:5px;
+    border:none;
+    background:#222;
+    color:#fff;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.tabs button:hover {
+    background:#00ffcc;
+    color:#000;
+}
+
+/* CONSOLE */
+#console {
+    margin-top:10px;
+    height:420px;
+    background:#000;
+    color:#00ff00;
+    padding:10px;
+    overflow:auto;
+    font-family:Consolas;
+    border-radius:8px;
+    border:1px solid #333;
+}
+
+/* FOOTER */
+.footer {
+    position:fixed;
+    bottom:0;
+    left:220px;
+    right:0;
+    text-align:center;
+    padding:6px;
+    font-size:12px;
+    background:#111;
+    color:#888;
+    border-top:1px solid #222;
+}
+</style>
+
+<script>
+var shell = new ActiveXObject("WScript.Shell");
+
+/* Splash remove */
+function startApp(){
+    document.getElementById("splash").style.display="none";
+}
+
+/* CMD RUN */
+function run(cmd){
+    try{
+        var exec = shell.Exec("cmd /c " + cmd);
+        var out="";
+
+        while(!exec.StdOut.AtEndOfStream){
+            out += exec.StdOut.ReadLine()+"\n";
+        }
+
+        document.getElementById("console").innerText =
+        ">> " + cmd + "\n\n" + out + "\n----------------------\n";
+    }catch(e){
+        document.getElementById("console").innerText = e.message;
+    }
+}
+
+/* Tabs */
+function showTab(tab){
+    var text="";
+    if(tab=="system"){
+        text="SYSTEM MODE READY...";
+    }
+    if(tab=="network"){
+        text="NETWORK DIAGNOSTICS READY...";
+    }
+    if(tab=="tools"){
+        text="TOOLS LOADED...";
+    }
+
+    document.getElementById("console").innerText=text;
+}
+</script>
+
+</head>
+
+<body onload="setTimeout(startApp,2000)">
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+    <h1>ULTIMATE PC TOOLKIT PRO</h1>
+    <p style="color:#aaa;">Loading modules...</p>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>TOOLKIT</h2>
+
+    <button onclick="run('taskmgr')">Task Manager</button>
+    <button onclick="run('services.msc')">Services</button>
+    <button onclick="run('devmgmt.msc')">Device Manager</button>
+    <button onclick="run('control')">Control Panel</button>
+
+    <hr style="border:0;border-top:1px solid #333;">
+
+    <button onclick="run('ipconfig')">IP Config</button>
+    <button onclick="run('systeminfo')">System Info</button>
+    <button onclick="run('whoami')">User Info</button>
+
+    <hr style="border:0;border-top:1px solid #333;">
+
+    <button onclick="run('sfc /scannow')">SFC Scan</button>
+    <button onclick="run('DISM /Online /Cleanup-Image /RestoreHealth')">DISM Fix</button>
+
+    <hr style="border:0;border-top:1px solid #333;">
+
+    <button onclick="window.close()" style="background:#ff4444;">Exit</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <h2 style="color:#00ffcc;">Dashboard Console</h2>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button onclick="showTab('system')">System</button>
+        <button onclick="showTab('network')">Network</button>
+        <button onclick="showTab('tools')">Tools</button>
+    </div>
+
+    <!-- Console -->
+    <div id="console">Initializing...\n</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    Developed by <b style="color:#00ffcc;">SURAJ SRIVASTAVA (SONU RAJA)</b>
+</div>
+
+</body>
+</html>
